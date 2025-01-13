@@ -1,63 +1,73 @@
-import React, { useEffect, useState } from "react";
-import { fetchHistory } from "../services/apiService";
+import React, { useEffect, useState } from 'react';
+import { fetchHistory } from '../services/apiService.tsx';
 
-interface Calculation {
+interface CalculationHistory {
   id: number;
-  S: number;
-  K: number;
+  S0: number;
+  X: number;
+  r: number;
   T: number;
   sigma: number;
-  r: number;
-  q: number;
+  dividend_yield: number;
   call_price: number;
   put_price: number;
 }
 
 const History: React.FC = () => {
-  const [history, setHistory] = useState<Calculation[]>([]);
+  const [history, setHistory] = useState<CalculationHistory[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadHistory = async () => {
+    const getHistory = async () => {
       try {
-        const data = await fetchHistory();
-        setHistory(data);
+        const historyData = await fetchHistory();
+        setHistory(historyData);
       } catch (error) {
-        alert(error.message);
+        setError("Error fetching history.");
       }
     };
 
-    loadHistory();
+    getHistory();
   }, []);
 
   return (
     <div>
       <h2>Calculation History</h2>
+      {error && <p>{error}</p>}
       <table>
         <thead>
           <tr>
-            <th>Stock Price</th>
-            <th>Strike Price</th>
-            <th>Time to Expiration</th>
-            <th>Volatility</th>
-            <th>Risk-Free Rate</th>
+            <th>ID</th>
+            <th>S0</th>
+            <th>X</th>
+            <th>r</th>
+            <th>T</th>
+            <th>Sigma</th>
             <th>Dividend Yield</th>
             <th>Call Price</th>
             <th>Put Price</th>
           </tr>
         </thead>
         <tbody>
-          {history.map((entry) => (
-            <tr key={entry.id}>
-              <td>{entry.S}</td>
-              <td>{entry.K}</td>
-              <td>{entry.T}</td>
-              <td>{entry.sigma}</td>
-              <td>{entry.r}</td>
-              <td>{entry.q}</td>
-              <td>{entry.call_price.toFixed(2)}</td>
-              <td>{entry.put_price.toFixed(2)}</td>
+          {history.length > 0 ? (
+            history.map((calc) => (
+              <tr key={calc.id}>
+                <td>{calc.id}</td>
+                <td>{calc.S0}</td>
+                <td>{calc.X}</td>
+                <td>{calc.r}</td>
+                <td>{calc.T}</td>
+                <td>{calc.sigma}</td>
+                <td>{calc.dividend_yield}</td>
+                <td>{calc.call_price}</td>
+                <td>{calc.put_price}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={9}>No calculations available.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

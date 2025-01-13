@@ -17,14 +17,22 @@ def calculate_black_scholes(S0, X, r, T, sigma, dividend_yield):
     # Round prices to 2 decimal places
     return round(call_price, 2), round(put_price, 2)
 
-
-# Store the calculation result in the database
 def store_calculation(db: Session, data: schemas.BlackScholesInput, call_price: float, put_price: float):
     db_calculation = models.Calculation(
-        S0=data.S0, X=data.X, r=data.r, T=data.T, sigma=data.sigma,
-        dividend_yield=data.dividend_yield, call_price=call_price, put_price=put_price
+        S0=data.S0,
+        X=data.X,
+        r=data.r,
+        T=data.T,
+        sigma=data.sigma,
+        dividend_yield=data.dividend_yield,
+        call_price=call_price,
+        put_price=put_price
     )
     db.add(db_calculation)
     db.commit()
     db.refresh(db_calculation)
     return db_calculation
+
+# Fetch calculation history from the database
+def get_calculation_history(db: Session):
+    return db.query(models.Calculation).all()

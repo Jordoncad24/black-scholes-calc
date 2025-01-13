@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import BlackScholesForm from "./components/BlackScholesForm";
-import History from "./components/History";
+import BlackScholesForm from "./components/BlackScholesForm.tsx";
+import History from "./components/History.tsx";
 
 const App: React.FC = () => {
   const [view, setView] = useState<"calculator" | "history">("calculator");

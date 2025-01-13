@@ -1,6 +1,6 @@
 # models.py
 from sqlalchemy import Column, Integer, Float
-from .database import Base
+from app.database import Base
 
 class Calculation(Base):
     __tablename__ = "calculations"
