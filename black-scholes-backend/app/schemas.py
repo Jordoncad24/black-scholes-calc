@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 # Schema for input data to calculate Black-Scholes
 class BlackScholesInput(BaseModel):
@@ -19,6 +20,7 @@ class CalculationHistory(BaseModel):
     dividend_yield: float
     call_price: float
     put_price: float
+    created_at: datetime
 
     class Config:
         orm_mode = True  # Allow conversion from SQLAlchemy model to Pydantic model

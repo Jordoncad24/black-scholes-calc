@@ -17,4 +17,5 @@ def calculate_black_scholes(data: schemas.BlackScholesInput, db: Session = Depen
 @calculate_router.get("/history", response_model=list[schemas.CalculationHistory])
 def get_history(db: Session = Depends(get_db)):
     history = crud.get_calculation_history(db)
+    print("Fetched history:", history)
     return history

@@ -3,6 +3,7 @@ import math
 from scipy.stats import norm
 from sqlalchemy.orm import Session
 from . import models, schemas
+from datetime import datetime, timezone
 
 def calculate_black_scholes(S0, X, r, T, sigma, dividend_yield):
     
@@ -18,6 +19,8 @@ def calculate_black_scholes(S0, X, r, T, sigma, dividend_yield):
     return round(call_price, 2), round(put_price, 2)
 
 def store_calculation(db: Session, data: schemas.BlackScholesInput, call_price: float, put_price: float):
+    created_at = datetime.now(timezone.utc)
+    print(f"Created At: {created_at}")  # Print to verify
     db_calculation = models.Calculation(
         S0=data.S0,
         X=data.X,
@@ -26,7 +29,8 @@ def store_calculation(db: Session, data: schemas.BlackScholesInput, call_price: 
         sigma=data.sigma,
         dividend_yield=data.dividend_yield,
         call_price=call_price,
-        put_price=put_price
+        put_price=put_price,
+        created_at=created_at
     )
     db.add(db_calculation)
     db.commit()

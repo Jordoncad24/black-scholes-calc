@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { calculateBlackScholes } from "../services/apiService.tsx"; // adjust path if needed
+import { calculateBlackScholes } from "../services/apiService.tsx";
 
 const BlackScholesCalculator = () => {
   const [S0, setS0] = useState<number>(100); // Underlying asset price
@@ -25,57 +25,117 @@ const BlackScholesCalculator = () => {
       });
       setCallPrice(result.call_price);
       setPutPrice(result.put_price);
+      setError(null); // Clear any previous error
     } catch (error) {
       setError("Failed to calculate Black-Scholes prices.");
     }
   };
 
-  return (
-    <div>
-      <h1>Black-Scholes Calculator</h1>
-      <div>
-        <input
-          type="number"
-          value={S0}
-          onChange={(e) => setS0(Number(e.target.value))}
-          placeholder="S0 (underlying price)"
-        />
-        <input
-          type="number"
-          value={X}
-          onChange={(e) => setX(Number(e.target.value))}
-          placeholder="X (strike price)"
-        />
-        <input
-          type="number"
-          value={T}
-          onChange={(e) => setT(Number(e.target.value))}
-          placeholder="T (time to expiration)"
-        />
-        <input
-          type="number"
-          value={sigma}
-          onChange={(e) => setSigma(Number(e.target.value))}
-          placeholder="Sigma (volatility)"
-        />
-        <input
-          type="number"
-          value={r}
-          onChange={(e) => setR(Number(e.target.value))}
-          placeholder="r (risk-free rate)"
-        />
-        <input
-          type="number"
-          value={dividend_yield}
-          onChange={(e) => setDividendYield(Number(e.target.value))}
-          placeholder="Dividend Yield"
-        />
-      </div>
-      <button onClick={handleCalculate}>Calculate</button>
+  const containerStyle = {
+    maxWidth: "600px",
+    margin: "20px auto",
+    padding: "20px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#f9f9f9",
+  };
 
-      {error && <div style={{ color: "red" }}>{error}</div>}
+  const inputStyle = {
+    margin: "10px 0",
+    padding: "10px",
+    width: "100%",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+  };
+
+  const buttonStyle = {
+    margin: "10px 0",
+    padding: "10px 20px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  };
+
+  const errorStyle = {
+    color: "red",
+    marginTop: "10px",
+  };
+
+  return (
+    <div style={containerStyle}>
+      <h1 style={{ textAlign: "center" }}>Black-Scholes Calculator</h1>
+      <div>
+        <label>
+          Underlying Asset Price (S0):
+          <input
+            style={inputStyle}
+            type="number"
+            value={S0}
+            onChange={(e) => setS0(Number(e.target.value))}
+            placeholder="Enter underlying asset price"
+          />
+        </label>
+        <label>
+          Strike Price (X):
+          <input
+            style={inputStyle}
+            type="number"
+            value={X}
+            onChange={(e) => setX(Number(e.target.value))}
+            placeholder="Enter strike price"
+          />
+        </label>
+        <label>
+          Time to Expiration (T):
+          <input
+            style={inputStyle}
+            type="number"
+            value={T}
+            onChange={(e) => setT(Number(e.target.value))}
+            placeholder="Enter time to expiration (years)"
+          />
+        </label>
+        <label>
+          Volatility (σ):
+          <input
+            style={inputStyle}
+            type="number"
+            value={sigma}
+            onChange={(e) => setSigma(Number(e.target.value))}
+            placeholder="Enter volatility (e.g., 0.2)"
+          />
+        </label>
+        <label>
+          Risk-Free Rate (r):
+          <input
+            style={inputStyle}
+            type="number"
+            value={r}
+            onChange={(e) => setR(Number(e.target.value))}
+            placeholder="Enter risk-free rate (e.g., 0.05)"
+          />
+        </label>
+        <label>
+          Dividend Yield (q):
+          <input
+            style={inputStyle}
+            type="number"
+            value={dividend_yield}
+            onChange={(e) => setDividendYield(Number(e.target.value))}
+            placeholder="Enter dividend yield (e.g., 0.03)"
+          />
+        </label>
+      </div>
+      <button style={buttonStyle} onClick={handleCalculate}>
+        Calculate
+      </button>
+
+      {error && <div style={errorStyle}>{error}</div>}
       {callPrice !== null && putPrice !== null && (
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <h2>Results</h2>
           <p>Call Price: {callPrice.toFixed(2)}</p>
           <p>Put Price: {putPrice.toFixed(2)}</p>

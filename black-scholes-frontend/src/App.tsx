@@ -1,21 +1,23 @@
 import React, { useState } from "react";
+import { Tab, Tabs } from "@mui/material";
 import BlackScholesForm from "./components/BlackScholesForm.tsx";
 import History from "./components/History.tsx";
 
-const App: React.FC = () => {
-  const [view, setView] = useState<"calculator" | "history">("calculator");
+const App = () => {
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue);
+  };
 
   return (
-    <div>
-      <nav>
-        <button onClick={() => setView("calculator")}>Calculator</button>
-        <button onClick={() => setView("history")}>History</button>
-      </nav>
-
-      <main>
-        {view === "calculator" && <BlackScholesForm />}
-        {view === "history" && <History />}
-      </main>
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+      <Tabs value={currentTab} onChange={handleTabChange} centered>
+        <Tab label="Calculator" />
+        <Tab label="History" />
+      </Tabs>
+      {currentTab === 0 && <BlackScholesForm />}
+      {currentTab === 1 && <History />}
     </div>
   );
 };

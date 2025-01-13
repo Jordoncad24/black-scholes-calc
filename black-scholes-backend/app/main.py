@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import Base, engine
+from app.database import Base, engine, create_tables
 from app.routes import calculate_router
+from app.database import create_tables
+
+create_tables()  # Make sure this runs at app startup
 
 # Initialize FastAPI app
 app = FastAPI()
