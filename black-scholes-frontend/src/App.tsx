@@ -18,7 +18,7 @@ const App = () => {
       <Tabs value={currentTab} onChange={handleTabChange} centered>
         <Tab label="About" />
         <Tab label="Calculator" />
-        <Tab label="History" />
+        <Tab label="Calculation History" />
       </Tabs>
       <ErrorBoundary>
         {currentTab === 0 && <About />}

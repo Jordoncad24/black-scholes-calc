@@ -155,7 +155,7 @@ const History: React.FC = () => {
 
   return (
     <div>
-      <h2>Calculation History</h2>
+      <h1 style={{ textAlign: "center" }}>Calculation History</h1>
       {error && (
         <>
           <div style={modalBackgroundStyle} onClick={() => setError(null)} />
