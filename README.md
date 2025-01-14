@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Black Scholes Calculator was part of a coding challenge provided to me by Touchstone Advisory. It consists of a Front end made in TypeScript and React and a Backend made in Python using FastAPI.
+This Black Scholes Calculator was part of a coding challenge provided to me by Touchstone Advisory. It consists of a Frontend made in TypeScript and React and a Backend made in Python using FastAPI.
 
 ## Features
 - **Black-Scholes Calculations**: Calculate European call and put option prices based on the Black-Scholes formula.
