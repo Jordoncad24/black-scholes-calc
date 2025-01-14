@@ -78,8 +78,8 @@ Before running this application, ensure you have the following installed on your
 
     This will start the FastAPI server on `http://localhost:8000`.
 
-### Database (Optional)
-If you're using a database to store calculation history (PostgreSQL, MongoDB, etc.), ensure that the database is properly set up and the connection strings are configured in the backend environment.
+### Database
+If you are using a database to store calculation history, ensure that the database is properly set up and the connection strings are configured in the backend environment.
 
 ### Access the Application
 Once both the frontend and backend servers are running, you can access the application at:
