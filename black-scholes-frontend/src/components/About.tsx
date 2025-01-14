@@ -39,13 +39,25 @@ const About = () => {
         options on stocks, commodities, and other assets.
       </p>
       <h2>Black-Scholes Formula</h2>
-      <p>The Black-Scholes formula is:</p>
+      <p>The Black-Scholes formula is as follows:</p>
       <KatexComponent formula="C = S_0 N(d_1) - X e^{-rT} N(d_2)" displayMode />
+
+      <p>Where:</p>
+      <ul>
+        <li><strong>C</strong> = Call option price</li>
+        <li><strong>S₀</strong> = Current stock price</li>
+        <li><strong>X</strong> = Strike price</li>
+        <li><strong>N(d₁)</strong> and <strong>N(d₂)</strong> = Cumulative standard normal distribution functions of <strong>d₁</strong> and <strong>d₂</strong></li>
+        <li><strong>T</strong> = Term of the option</li>
+        <li><strong>r</strong> = Risk-free interest rate</li>
+        <li><strong>q</strong> = Dividend yield percentage</li>
+        <li><strong>σ</strong> = Annualized volatility of the stock</li>
+      </ul>
 
       <p>For a put option, the formula is:</p>
       <KatexComponent formula="P = X e^{-rT} N(-d_2) - S_0 N(-d_1)" displayMode />
 
-      <p>d₁ and d₂ are calculated as:</p>
+      <h2>d₁ and d₂ Formulas</h2>
       <p><KatexComponent
         formula="d_1 = \frac{\ln(S_0 / X) + \left(r + \frac{\sigma^2}{2}\right) T}{\sigma \sqrt{T}}"
         displayMode
@@ -54,6 +66,13 @@ const About = () => {
         formula="d_2 = d_1 - \sigma \sqrt{T}"
         displayMode
       /></p>
+
+      <p>Where:</p>
+      <ul>
+        <li><strong>σ</strong> = Volatility of the underlying asset</li>
+        <li><strong>ln</strong> = Natural logarithm</li>
+        <li><strong>√T</strong> = Square root of time to expiration</li>
+      </ul>
     </div>
   );
 };
