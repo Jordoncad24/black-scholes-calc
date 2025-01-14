@@ -38,3 +38,17 @@ export const fetchHistory = async () => {
     throw new Error("Failed to fetch calculation history.");
   }
 };
+
+export const clearHistory = async () => {
+  await axios.delete(`${API_BASE_URL}/clear`);
+};
+
+// Function to delete a record by ID
+export const deleteRecord = async (id: number) => {
+  try {
+    // Sending DELETE request to delete the record
+    await axios.delete(`${API_BASE_URL}/history/${id}`);
+  } catch (error) {
+    throw new Error(`Error deleting record with ID: ${id}`);
+  }
+};

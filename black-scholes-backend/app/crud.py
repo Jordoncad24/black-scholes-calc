@@ -4,6 +4,7 @@ from scipy.stats import norm
 from sqlalchemy.orm import Session
 from . import models, schemas
 from datetime import datetime, timezone
+from app.models import Calculation
 
 def calculate_black_scholes(S0, X, r, T, sigma, dividend_yield):
     
@@ -40,3 +41,18 @@ def store_calculation(db: Session, data: schemas.BlackScholesInput, call_price: 
 # Fetch calculation history from the database
 def get_calculation_history(db: Session):
     return db.query(models.Calculation).all()
+
+def clear_all_calculations(db: Session):
+    db.query(Calculation).delete()
+    db.commit()
+
+def delete_calculation_by_id(db: Session, id: int):
+    # Fetch the record by ID
+    record = db.query(Calculation).filter(Calculation.id == id).first()
+    
+    if record is None:
+        raise Exception(f"Record with ID {id} not found.")
+    
+    # Delete the record from the database
+    db.delete(record)
+    db.commit()

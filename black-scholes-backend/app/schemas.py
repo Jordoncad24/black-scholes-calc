@@ -12,6 +12,7 @@ class BlackScholesInput(BaseModel):
 
 # Schema for calculation history response data
 class CalculationHistory(BaseModel):
+    id: int
     S0: float
     X: float
     r: float

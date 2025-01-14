@@ -12,6 +12,8 @@ const BlackScholesCalculator = () => {
   const [callPrice, setCallPrice] = useState<number | null>(null);
   const [putPrice, setPutPrice] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<any[]>([]); // Store history of calculations
+  const [notification, setNotification] = useState<string | null>(null); // Popup notification
 
   const handleCalculate = async () => {
     try {
@@ -23,11 +25,47 @@ const BlackScholesCalculator = () => {
         r: r,
         q: dividend_yield,
       });
+
       setCallPrice(result.call_price);
       setPutPrice(result.put_price);
       setError(null); // Clear any previous error
+
+      // Add new calculation to history with a unique ID (based on length of history)
+      const newCalculation = {
+        id: history.length + 1,
+        S: S0,
+        K: X,
+        T: T,
+        sigma: sigma,
+        r: r,
+        q: dividend_yield,
+        call_price: result.call_price,
+        put_price: result.put_price,
+      };
+
+      setHistory([...history, newCalculation]);
+
+      // Show the notification with the calculation ID
+      setNotification(`Calculation added to history with ID #${newCalculation.id}`);
+
+      // Reset the notification after 3 seconds
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+
     } catch (error) {
       setError("Failed to calculate Black-Scholes prices.");
+      setNotification(null); // Reset notification on error
+    }
+  };
+
+  const handleInputChange = (
+    setter: React.Dispatch<React.SetStateAction<number>>,
+    value: string
+  ) => {
+    // Allow only numeric input
+    if (/^\d*\.?\d*$/.test(value)) {
+      setter(value === "" ? 0 : parseFloat(value));
     }
   };
 
@@ -64,6 +102,18 @@ const BlackScholesCalculator = () => {
     marginTop: "10px",
   };
 
+  const notificationStyle = {
+    position: "fixed" as "fixed",
+    top: "20px",
+    right: "20px",
+    padding: "10px 20px",
+    backgroundColor: "#4CAF50", // Green background for success
+    color: "#fff",
+    borderRadius: "5px",
+    zIndex: 9999,
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  };
+
   return (
     <div style={containerStyle}>
       <h1 style={{ textAlign: "center" }}>Black-Scholes Calculator</h1>
@@ -72,9 +122,9 @@ const BlackScholesCalculator = () => {
           Underlying Asset Price (S0):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={S0}
-            onChange={(e) => setS0(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setS0, e.target.value)}
             placeholder="Enter underlying asset price"
           />
         </label>
@@ -82,9 +132,9 @@ const BlackScholesCalculator = () => {
           Strike Price (X):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={X}
-            onChange={(e) => setX(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setX, e.target.value)}
             placeholder="Enter strike price"
           />
         </label>
@@ -92,9 +142,9 @@ const BlackScholesCalculator = () => {
           Time to Expiration (T):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={T}
-            onChange={(e) => setT(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setT, e.target.value)}
             placeholder="Enter time to expiration (years)"
           />
         </label>
@@ -102,9 +152,9 @@ const BlackScholesCalculator = () => {
           Volatility (σ):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={sigma}
-            onChange={(e) => setSigma(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setSigma, e.target.value)}
             placeholder="Enter volatility (e.g., 0.2)"
           />
         </label>
@@ -112,9 +162,9 @@ const BlackScholesCalculator = () => {
           Risk-Free Rate (r):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={r}
-            onChange={(e) => setR(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setR, e.target.value)}
             placeholder="Enter risk-free rate (e.g., 0.05)"
           />
         </label>
@@ -122,9 +172,9 @@ const BlackScholesCalculator = () => {
           Dividend Yield (q):
           <input
             style={inputStyle}
-            type="number"
+            type="text"
             value={dividend_yield}
-            onChange={(e) => setDividendYield(Number(e.target.value))}
+            onChange={(e) => handleInputChange(setDividendYield, e.target.value)}
             placeholder="Enter dividend yield (e.g., 0.03)"
           />
         </label>
@@ -140,6 +190,10 @@ const BlackScholesCalculator = () => {
           <p>Call Price: {callPrice.toFixed(2)}</p>
           <p>Put Price: {putPrice.toFixed(2)}</p>
         </div>
+      )}
+
+      {notification && (
+        <div style={notificationStyle}>{notification}</div>
       )}
     </div>
   );

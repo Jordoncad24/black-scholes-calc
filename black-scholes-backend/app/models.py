@@ -5,7 +5,7 @@ from app.database import Base
 class Calculation(Base):
     __tablename__ = "calculations"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     S0 = Column(Float)
     X = Column(Float)
     r = Column(Float)
