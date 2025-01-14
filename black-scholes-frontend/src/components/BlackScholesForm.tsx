@@ -16,6 +16,19 @@ const BlackScholesCalculator = () => {
   const [notification, setNotification] = useState<string | null>(null); // Popup notification
 
   const handleCalculate = async () => {
+    // Validation checks for edge cases
+    if (S0 <= 0 || X <= 0 || T <= 0 || sigma <= 0 || r < 0 || dividend_yield < 0) {
+      setError("All inputs must be positive values. Time, Volatility, Asset and Strike Prices must be greater than zero.");
+      setNotification(null); // Reset notification on error
+      return;
+    }
+
+    if (dividend_yield >= r) {
+      setError("Dividend yield must be less than the risk-free rate.");
+      setNotification(null); // Reset notification on error
+      return;
+    }
+
     try {
       const result = await calculateBlackScholes({
         S: S0,
@@ -85,6 +98,7 @@ const BlackScholesCalculator = () => {
     width: "100%",
     border: "1px solid #ddd",
     borderRadius: "4px",
+    boxSizing: "border-box" as "border-box", // Ensures input fits within container
   };
 
   const buttonStyle = {
@@ -107,7 +121,7 @@ const BlackScholesCalculator = () => {
     top: "20px",
     right: "20px",
     padding: "10px 20px",
-    backgroundColor: "#4CAF50", // Green background for success
+    backgroundColor: "#4CAF50",
     color: "#fff",
     borderRadius: "5px",
     zIndex: 9999,
@@ -139,7 +153,7 @@ const BlackScholesCalculator = () => {
           />
         </label>
         <label>
-          Time to Expiration (T):
+          Time to Expiration (years) (T):
           <input
             style={inputStyle}
             type="text"
@@ -149,7 +163,7 @@ const BlackScholesCalculator = () => {
           />
         </label>
         <label>
-          Volatility (σ):
+          Annualised Volatility Eg.(0.2) (σ):
           <input
             style={inputStyle}
             type="text"
@@ -159,7 +173,7 @@ const BlackScholesCalculator = () => {
           />
         </label>
         <label>
-          Risk-Free Rate (r):
+          Risk-Free Interest Rate (r):
           <input
             style={inputStyle}
             type="text"

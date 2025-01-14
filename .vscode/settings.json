@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./black-scholes-backend/tests/test_"
+    ]
+}

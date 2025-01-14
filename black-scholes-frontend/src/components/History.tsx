@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { fetchHistory, clearHistory, deleteRecord } from '../services/apiService.tsx';
 
 interface CalculationHistory {
@@ -25,6 +25,8 @@ const History: React.FC = () => {
   const [showPrompt, setShowPrompt] = useState(false);  // Control prompt visibility
   const [recordIdToDelete, setRecordIdToDelete] = useState<number | null>(null);  // Store the ID entered in the prompt
 
+  const tableRef = useRef<HTMLTableElement | null>(null);  // Ref to table for detecting clicks outside
+
   useEffect(() => {
     const getHistory = async () => {
       try {
@@ -36,6 +38,20 @@ const History: React.FC = () => {
     };
 
     getHistory();
+  }, []);
+
+  // Event listener to handle clicks outside the table
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
+        setSelectedRecordId(null);  // Deselect the row if clicking outside
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
   }, []);
 
   const handleSort = (key: keyof CalculationHistory) => {
@@ -130,6 +146,13 @@ const History: React.FC = () => {
     zIndex: 999,
   };
 
+  const renderSortIcon = (key: keyof CalculationHistory) => {
+    if (sortConfig && sortConfig.key === key) {
+      return sortConfig.order === 'asc' ? '↑' : '↓';
+    }
+    return '';
+  };
+
   return (
     <div>
       <h2>Calculation History</h2>
@@ -166,19 +189,39 @@ const History: React.FC = () => {
           <button onClick={() => setShowPrompt(false)}>Cancel</button>
         </div>
       )}
-      <table style={tableStyle}>
+      <table style={tableStyle} ref={tableRef}>
         <thead>
           <tr>
-            <th style={thStyle} onClick={() => handleSort('id')}>ID</th>
-            <th style={thStyle} onClick={() => handleSort('S0')}>S0</th>
-            <th style={thStyle} onClick={() => handleSort('X')}>X</th>
-            <th style={thStyle} onClick={() => handleSort('r')}>r</th>
-            <th style={thStyle} onClick={() => handleSort('T')}>T</th>
-            <th style={thStyle} onClick={() => handleSort('sigma')}>Sigma</th>
-            <th style={thStyle} onClick={() => handleSort('dividend_yield')}>Dividend Yield</th>
-            <th style={thStyle} onClick={() => handleSort('call_price')}>Call Price</th>
-            <th style={thStyle} onClick={() => handleSort('put_price')}>Put Price</th>
-            <th style={thStyle} onClick={() => handleSort('created_at')}>Created At</th>
+            <th style={thStyle} onClick={() => handleSort('id')}>
+              ID {renderSortIcon('id')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('S0')}>
+              S0 {renderSortIcon('S0')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('X')}>
+              X {renderSortIcon('X')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('r')}>
+              r {renderSortIcon('r')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('T')}>
+              T {renderSortIcon('T')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('sigma')}>
+              Sigma {renderSortIcon('sigma')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('dividend_yield')}>
+              Dividend Yield {renderSortIcon('dividend_yield')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('call_price')}>
+              Call Price {renderSortIcon('call_price')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('put_price')}>
+              Put Price {renderSortIcon('put_price')}
+            </th>
+            <th style={thStyle} onClick={() => handleSort('created_at')}>
+              Created At {renderSortIcon('created_at')}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -186,7 +229,7 @@ const History: React.FC = () => {
             history.map((calc) => (
               <tr 
                 key={calc.id} 
-                onClick={() => setSelectedRecordId(calc.id)} 
+                onClick={() => setSelectedRecordId(selectedRecordId === calc.id ? null : calc.id)} 
                 style={{ backgroundColor: selectedRecordId === calc.id ? 'lightgray' : 'white' }}
               >
                 <td style={tdStyle}>{calc.id}</td>
